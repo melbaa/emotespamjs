@@ -5,7 +5,9 @@ A greasemonkey script that spams emotes on twitch.tv chat.
 * It won't trigger from your own nick.
 * It will wait a few minutes between emotes.
 * It will not send anything if your have something typed in in the chatbox.
-
+* The code is split into a loader and payload for two reasons. It allows 
+local configuration edits without changing the hosted version on the server. 
+It allows the script to be debugged from the dev tools in the browser.
 
 # Install
 Scripts assumes you have Better Twitch TV (BetterTTV) installed.
