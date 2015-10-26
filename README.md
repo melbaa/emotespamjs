@@ -10,5 +10,5 @@ A greasemonkey script that spams emotes on twitch.tv chat.
 # Install
 Scripts assumes you have Better Twitch TV (BetterTTV) installed.
 
-To use, install it and edit your nick from
+To use, [install it](https://github.com/melbaa/emotespamjs/raw/master/emotespam.js) and edit your nick from
 manage user scripts -> options -> Edit this user script.
