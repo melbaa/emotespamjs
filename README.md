@@ -10,7 +10,9 @@ local configuration edits without changing the hosted version on the server.
 It allows the script to be debugged from the dev tools in the browser.
 
 # Install
-Scripts assumes you have Better Twitch TV (BetterTTV) installed.
+Script assumes you have Better Twitch TV (BetterTTV) and
+greasemonkey (or tampermonkey on eg. a chromebook) working.
 
 To use, [install it](https://github.com/melbaa/emotespamjs/raw/master/emotespam.user.js) and edit your nick from
 manage user scripts -> options -> Edit this user script.
+
