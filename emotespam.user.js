@@ -18,48 +18,54 @@
 
 function init()
 {
-  console.log('hi');
-  
-  var MY_NICK = 'melbaa';
-  //respond to messages from those nicks and highlight them
+    console.log('hi');
 
-  var LINE_COLOR = 'aqua';
+    var MY_NICK = 'melbaa';
 
-  /*
-  omg the amount of hax here
-  
-  first of all, had to dynamically load js because can't debug it as
-  greasemonkey script. it wasnt showing if its loading at all, if it has 
-  syntax errors, so this had to happpen. 
-  had to be loaded in <head> probably because browser enforces some security?
-  
-  but to prevent caching the script, so that we can update it, we append
-  math.random() as query string
-  
-  we don't know when the browser will load the script, so it has to trigger
-  itself until all its dependencies are loaded (in our case jquery). this is
-  part of the main script, not this loader
-  
-  there are some settings we have to set here in the client loader
-  in order to personalize the script.
-  but how to pass variables to the script we are about to load? 
-  solution: serialize and attach them as data-attributes and deserialize
-  them in the main script.  
-  
-  */
+    var LINE_COLOR = 'aqua';
+    
+    // maps a regex pattern to text to send
+    // eg 'OpieOP' -> 'I found opie'
+    var PATTERNS = {
+        'OpieOP': 'OpieOP',
+    }
+    
+    /*
+    omg the amount of hax here
+
+    first of all, had to dynamically load js because can't debug it as
+    greasemonkey script. it wasnt showing if its loading at all, if it has 
+    syntax errors, so this had to happpen. 
+    had to be loaded in <head> probably because browser enforces some security?
+
+    but to prevent caching the script, so that we can update it, we append
+    math.random() as query string
+
+    we don't know when the browser will load the script, so it has to trigger
+    itself until all its dependencies are loaded (in our case jquery). this is
+    part of the main script, not this loader
+
+    there are some settings we have to set here in the client loader
+    in order to personalize the script.
+    but how to pass variables to the script we are about to load? 
+    solution: serialize and attach them as data-attributes and deserialize
+    them in the main script.  
+
+    */
   
 	var script = document.createElement('script');
 	script.type = 'text/javascript';
 	script.src = "http://melbalabs.com/static/emotespam/emotespam.js" + '?' +Math.random();
   
-  //we'll need the id to get the attributes attached to the script
+    //we'll need the id to get the attributes attached to the script
 
-  script.setAttribute('id','emotespam');
-  script.setAttribute('data-my_nick', MY_NICK);
-  script.setAttribute('data-line_color', LINE_COLOR);
+    script.setAttribute('id','emotespam');
+    script.setAttribute('data-my_nick', MY_NICK);
+    script.setAttribute('data-line_color', LINE_COLOR);
+    script.setAttribute('data-patterns', PATTERNS);
 
-  document.getElementsByTagName('head')[0].appendChild(script);
-  console.log('trying to load script');
+    document.getElementsByTagName('head')[0].appendChild(script);
+    console.log('trying to load script');
 }
 
 
