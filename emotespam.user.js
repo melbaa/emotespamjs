@@ -3,7 +3,7 @@
 // @namespace   mel
 // @description OpieOP 
 // @include     http://www.twitch.tv/*
-// @version     1
+// @version     2
 // @grant       none
 // ==/UserScript==
 
@@ -62,7 +62,7 @@ function init()
     script.setAttribute('id','emotespam');
     script.setAttribute('data-my_nick', MY_NICK);
     script.setAttribute('data-line_color', LINE_COLOR);
-    script.setAttribute('data-patterns', PATTERNS);
+    script.setAttribute('data-patterns', JSON.stringify(PATTERNS));
 
     document.getElementsByTagName('head')[0].appendChild(script);
     console.log('trying to load script');
