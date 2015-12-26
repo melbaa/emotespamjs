@@ -24,9 +24,6 @@ function init()
   //respond to messages from those nicks and highlight them
 
   var LINE_COLOR = 'aqua';
-  //bet only if a player has this or better chances to win
-
-
 
   /*
   omg the amount of hax here
