@@ -3,7 +3,8 @@
 // @namespace   mel
 // @description OpieOP 
 // @include     http://www.twitch.tv/*
-// @version     2
+// @include     https://www.twitch.tv/*
+// @version     3
 // @grant       none
 // ==/UserScript==
 
