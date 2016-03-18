@@ -148,7 +148,7 @@ function mel_main() {
         // mins
         log(now - old);
         //return now - old >= 1000 * 60 * 5;
-        return now - old >= 1000 * 60 * 6;
+        return now - old >= 1000 * 60 * 10;
     }
   
     var myself = function(jNode, my_nick) {
