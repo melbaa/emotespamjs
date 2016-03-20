@@ -56,7 +56,7 @@ function init()
   
 	var script = document.createElement('script');
 	script.type = 'text/javascript';
-	script.src = "http://melbalabs.com/static/emotespam/emotespam.js" + '?' +Math.random();
+	script.src = "//melbalabs.com/static/emotespam/emotespam.js" + '?' +Math.random();
   
     //we'll need the id to get the attributes attached to the script
 
