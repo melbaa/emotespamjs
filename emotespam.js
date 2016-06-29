@@ -12,6 +12,8 @@ function mel_main() {
     var MY_NICK = script.data('my_nick');
     var LINE_COLOR = script.data('line_color');
     var PATTERNS = script.data('patterns');
+    var OWN_CHANNEL = (MY_NICK === window.location.pathname.substr(1))
+    var MIN_WAIT_MS = OWN_CHANNEL ? 1000 * 5 : 1000 * 60 * 10;
 
     /*--- waitForKeyElements():  A utility function, for Greasemonkey scripts,
         that detects and handles AJAXed content.
@@ -119,6 +121,24 @@ function mel_main() {
         evt.initMouseEvent('click', true, true, window, 0, 1, 1, 1, 1, false, false, false, false, 0, null);
         elm.dispatchEvent(evt);
     }
+    
+    function find_sendbtn() {
+        var found = false;
+        var btn_queries = ['.chat-buttons-container button.button', '.chat-buttons-container .primary', 'button.button.send-chat-button']
+        var sendbtn = null;
+        for (var i = 0; i < btn_queries.length && !found; ++i) {
+            var query = btn_queries[i];
+            sendbtn = $(query);
+            if (sendbtn.length === 0){
+                log('sendbtn not found as ' + query);
+            } else if (sendbtn.length !== 1) {
+                log('wtf ' + query);
+            } else {
+                found = true;
+            }
+        }
+        return sendbtn;
+    }
 
     function send_to_chat(txt) {
         var txtarea = $('textarea.ember-view.ember-text-area');
@@ -133,10 +153,11 @@ function mel_main() {
             log("won't send, typing");
             return false;
         }
+        
 
-        var sendbtn = $('button.button.send-chat-button');
-        if (sendbtn.length === 0){
-            log('sendbtn not found');
+        var sendbtn = find_sendbtn();
+        if (sendbtn.length === 0) {
+            log('sendbtn not found :/');
             return;
         }
         log('before click ' + txtarea.val());
@@ -148,10 +169,13 @@ function mel_main() {
         // mins
         log(now - old);
         //return now - old >= 1000 * 60 * 5;
-        return now - old >= 1000 * 60 * 10;
+        return now - old >= MIN_WAIT_MS;
     }
   
     var myself = function(jNode, my_nick) {
+        //own chan has no spam filter and triggers from self
+        if (OWN_CHANNEL) return 0;
+        
         // $('.chat-line[data-sender!=melbaa').find('.message').eq(1)
         var selector = '.chat-line[data-sender=' + my_nick + ']';
         return jNode.find(selector).addBack(selector).size() === 1;
@@ -201,7 +225,7 @@ function mel_main() {
                 // send only 1 message per wait cycle
                 return;
             } else if (!matches) {
-                // log('opie not found');
+                //log('opie not found');
             }   
         }
     }
