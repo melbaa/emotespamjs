@@ -7,13 +7,14 @@ function mel_main() {
 
     //var log = unsafeWindow.console.log;
     var log = console.log;
-
+    log('emotespam loaded');
     var script = $('#emotespam');
-    var MY_NICK = script.data('my_nick');
+    var MY_NICK = script.data('my_nick').toLowerCase();
     var LINE_COLOR = script.data('line_color');
     var PATTERNS = script.data('patterns');
-    var OWN_CHANNEL = (MY_NICK === window.location.pathname.substr(1))
+    var OWN_CHANNEL = (MY_NICK === window.location.pathname.substr(1));
     var MIN_WAIT_MS = OWN_CHANNEL ? 1000 * 5 : 1000 * 60 * 10;
+    //var MIN_WAIT_MS = 1000;
 
     /*--- waitForKeyElements():  A utility function, for Greasemonkey scripts,
         that detects and handles AJAXed content.
@@ -87,7 +88,7 @@ function mel_main() {
         if (btargetsFound && bWaitOnce && timeControl) {
             //--- The only condition where we need to clear the timer.
             clearInterval(timeControl);
-            delete controlObj[controlKey]
+            delete controlObj[controlKey];
         }
         else {
             //--- Set a timer, if needed.
@@ -124,7 +125,7 @@ function mel_main() {
     
     function find_sendbtn() {
         var found = false;
-        var btn_queries = ['.chat-buttons-container button.button', '.chat-buttons-container .primary', 'button.button.send-chat-button']
+        var btn_queries = ['.chat-buttons-container button.button.qa-chat-buttons__submit.js-chat-buttons__submit', '.chat-buttons-container .primary', 'button.button.send-chat-button']
         var sendbtn = null;
         for (var i = 0; i < btn_queries.length && !found; ++i) {
             var query = btn_queries[i];
@@ -141,7 +142,7 @@ function mel_main() {
     }
 
     function send_to_chat(txt) {
-        var txtarea = $('textarea.ember-view.ember-text-area');
+        var txtarea = $('textarea.ember-view.ember-text-area.chat_text_input');
         if (txtarea.length === 0){
             log('txtarea not found :/');
             return;
@@ -162,6 +163,7 @@ function mel_main() {
         }
         log('before click ' + txtarea.val());
         click(sendbtn[0]);
+        //sendbtn.click();
         return true;
     }
   

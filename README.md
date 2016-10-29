@@ -16,3 +16,7 @@ greasemonkey (or tampermonkey on eg. a chromebook) working.
 To use, [install it](https://github.com/melbaa/emotespamjs/raw/master/emotespam.user.js) and edit your nick from
 manage user scripts -> options -> Edit this user script.
 
+
+# Thanks
+* Tailwhiper for reporting bugs and helping me with debugging.  
+* Epicus147 for reporting bugs and testing.  
