@@ -4,6 +4,7 @@
 // @description OpieOP
 // @include     http://www.twitch.tv/*
 // @include     https://www.twitch.tv/*
+// @require http://code.jquery.com/jquery-3.3.1.min.js
 // @version     3
 // @grant       none
 // ==/UserScript==
