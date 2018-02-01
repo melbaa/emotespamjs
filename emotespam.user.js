@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        emotespam
 // @namespace   mel
-// @description OpieOP 
+// @description OpieOP
 // @include     http://www.twitch.tv/*
 // @include     https://www.twitch.tv/*
 // @version     3
@@ -24,19 +24,19 @@ function init()
     var MY_NICK = 'melbaa';
 
     var LINE_COLOR = 'aqua';
-    
+
     // maps a regex pattern to text to send
     // eg 'OpieOP' -> 'I found opie'
     var PATTERNS = {
         'OpieOP': 'OpieOP',
     }
-    
+
     /*
     omg the amount of hax here
 
     first of all, had to dynamically load js because can't debug it as
-    greasemonkey script. it wasnt showing if its loading at all, if it has 
-    syntax errors, so this had to happpen. 
+    greasemonkey script. it wasnt showing if its loading at all, if it has
+    syntax errors, so this had to happpen.
     had to be loaded in <head> probably because browser enforces some security?
 
     but to prevent caching the script, so that we can update it, we append
@@ -48,22 +48,23 @@ function init()
 
     there are some settings we have to set here in the client loader
     in order to personalize the script.
-    but how to pass variables to the script we are about to load? 
+    but how to pass variables to the script we are about to load?
     solution: serialize and attach them as data-attributes and deserialize
-    them in the main script.  
+    them in the main script.
 
     */
-  
-	var script = document.createElement('script');
-	script.type = 'text/javascript';
-	script.src = "//melbalabs.com/static/emotespam/emotespam.js" + '?' +Math.random();
-  
+
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = "//melbalabs.com/static/emotespam/emotespam.js" + '?' +Math.random();
+
     //we'll need the id to get the attributes attached to the script
 
     script.setAttribute('id','emotespam');
     script.setAttribute('data-my_nick', MY_NICK);
     script.setAttribute('data-line_color', LINE_COLOR);
     script.setAttribute('data-patterns', JSON.stringify(PATTERNS));
+    script.setAttribute('data-debug_enabled', true);
 
     document.getElementsByTagName('head')[0].appendChild(script);
     console.log('trying to load script');

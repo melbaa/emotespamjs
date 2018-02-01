@@ -12,9 +12,14 @@ function mel_main() {
     var MY_NICK = script.data('my_nick').toLowerCase();
     var LINE_COLOR = script.data('line_color');
     var PATTERNS = script.data('patterns');
+    var DEBUG_ENABLED = script.data('debug_enabled');
     var OWN_CHANNEL = (MY_NICK === window.location.pathname.substr(1));
     var MIN_WAIT_MS = OWN_CHANNEL ? 1000 * 5 : 1000 * 60 * 10;
     //var MIN_WAIT_MS = 1000;
+
+    function debuglog(txt) {
+        if (DEBUG_ENABLED) log(txt);
+    }
 
     /*--- waitForKeyElements():  A utility function, for Greasemonkey scripts,
         that detects and handles AJAXed content.
@@ -112,8 +117,8 @@ function mel_main() {
         // see https://developer.mozilla.org/en-US/docs/Web/API/document.createEvent for alternative and example
         // also https://developer.mozilla.org/en-US/docs/Web/Reference/Events/click
 
-        //also 
-        /* 
+        //also
+        /*
         var evt = document.createEvent("MouseEvents");
         evt.initEvent("click", true, true);
         el.dispatchEvent(evt);
@@ -122,7 +127,7 @@ function mel_main() {
         evt.initMouseEvent('click', true, true, window, 0, 1, 1, 1, 1, false, false, false, false, 0, null);
         elm.dispatchEvent(evt);
     }
-    
+
     function find_sendbtn() {
         var found = false;
         var btn_queries = ['.chat-buttons-container button.button.qa-chat-buttons__submit.js-chat-buttons__submit', '.chat-buttons-container .primary', 'button.button.send-chat-button']
@@ -154,7 +159,7 @@ function mel_main() {
             log("won't send, typing");
             return false;
         }
-        
+
 
         var sendbtn = find_sendbtn();
         if (sendbtn.length === 0) {
@@ -166,43 +171,45 @@ function mel_main() {
         //sendbtn.click();
         return true;
     }
-  
+
     var long_enough = function(old, now) {
         // mins
         log(now - old);
         //return now - old >= 1000 * 60 * 5;
         return now - old >= MIN_WAIT_MS;
     }
-  
+
     var myself = function(jNode, my_nick) {
         //own chan has no spam filter and triggers from self
         if (OWN_CHANNEL) return 0;
-        
+
         // $('.chat-line[data-sender!=melbaa').find('.message').eq(1)
-        var selector = '.chat-line[data-sender=' + my_nick + ']';
-        return jNode.find(selector).addBack(selector).size() === 1;
+        //var selector = '.chat-line[data-sender=' + my_nick + ']';
+        var selector = '.from';
+        var node = jNode.find(selector).addBack(selector);
+        return node.length === 1 && node.text() === my_nick;
     }
 
-  
+
 
 
     last_seen = new Date();
     function highlightGoodComments(jNode) {
         // log('found a chat line');
-          
+
         if (myself(jNode, MY_NICK)) {
             log('found myself');
             return;
         }
-        
-        // log(jNode.text());            
+
+        debuglog(jNode.text());
         var msgs = jNode.find('.message');
         if (msgs.length === 0) {
             log('.message not found');
             return;
         }
-        var txt = msgs.attr('data-raw'); // because .data() can cast to eg int
-        
+        //var txt = msgs.attr('data-raw'); // because .data() can cast to eg int
+        var txt = msgs.text();
         // for each pattern, send text
         var patterns = Object.keys(PATTERNS)
         for (var i = 0; i < patterns.length; ++i) {
@@ -213,7 +220,7 @@ function mel_main() {
                 var now = new Date();
                 if (!long_enough(last_seen, now)) {
                     log ('too soon');
-                    return;  
+                    return;
                 }
                 var spam_txt = PATTERNS[pattern];
                 log('mel trying to send ' + spam_txt);
@@ -227,11 +234,13 @@ function mel_main() {
                 // send only 1 message per wait cycle
                 return;
             } else if (!matches) {
-                //log('opie not found');
-            }   
+                debuglog('opie not found');
+            }
         }
     }
-    waitForKeyElements('div.chat-line', highlightGoodComments);
+    // mark all previous lines as seen, so we don't trigger on old chat
+    $('.chat-line').data('alreadyFound', true);
+    waitForKeyElements('.chat-line', highlightGoodComments);
 }
 
 
