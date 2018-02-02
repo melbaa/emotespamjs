@@ -154,11 +154,8 @@ function mel_main() {
         }
 
         if (txtarea.val().length === 0) {
-            //var e = new Event('keydown');
-            //e.which = e.keyCode = 32; // 32 is the keycode for the space bar
-            //document.dispatchEvent(e);
-            //txtarea[0].dispatchEvent(e);
 
+            // simulate input change for react
             var e = new Event('input', { bubbles: true })
             //element.value = value
             txtarea.val(txt);
@@ -193,10 +190,7 @@ function mel_main() {
         //own chan has no spam filter and triggers from self
         if (OWN_CHANNEL) return 0;
 
-        // $('.chat-line[data-sender!=melbaa').find('.message').eq(1)
-        //var selector = '.chat-line[data-sender=' + my_nick + ']';
         var selector = '.chat-line__username';
-        //var node = jNode.find(selector).addBack(selector);
         return node.length === 1 && node.text() === my_nick;
     }
 
@@ -205,7 +199,7 @@ function mel_main() {
 
     last_seen = new Date();
     function highlightGoodComments(jNode) {
-        log('found a chat line');
+        //log('found a chat line');
 
         if (myself(jNode, MY_NICK)) {
             log('found myself');
@@ -278,7 +272,7 @@ function mel_main() {
         var timeout = 1000;
         if(typeof $ === 'undefined') {
             window.setTimeout(GM_wait,timeout);
-            console.log('waiting for query');
+            console.log('waiting for jquery');
         }
         else
             $(function() { mel_main(); });
