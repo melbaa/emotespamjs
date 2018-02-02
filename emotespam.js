@@ -130,7 +130,7 @@ function mel_main() {
 
     function find_sendbtn() {
         var found = false;
-        var btn_queries = ['.chat-buttons-container button.button.qa-chat-buttons__submit.js-chat-buttons__submit', '.chat-buttons-container .primary', 'button.button.send-chat-button']
+        var btn_queries = ["[data-a-target='chat-send-button']"]
         var sendbtn = null;
         for (var i = 0; i < btn_queries.length && !found; ++i) {
             var query = btn_queries[i];
@@ -147,14 +147,24 @@ function mel_main() {
     }
 
     function send_to_chat(txt) {
-        var txtarea = $('textarea.ember-view.ember-text-area.chat_text_input');
+        var txtarea = $("[data-a-target='chat-input']");
         if (txtarea.length === 0){
             log('txtarea not found :/');
             return;
         }
 
         if (txtarea.val().length === 0) {
-            txtarea.val(txt).change();
+            //var e = new Event('keydown');
+            //e.which = e.keyCode = 32; // 32 is the keycode for the space bar
+            //document.dispatchEvent(e);
+            //txtarea[0].dispatchEvent(e);
+
+            var e = new Event('input', { bubbles: true })
+            //element.value = value
+            txtarea.val(txt);
+            txtarea[0].dispatchEvent(e)
+
+
         } else {
             log("won't send, typing");
             return false;
@@ -185,8 +195,8 @@ function mel_main() {
 
         // $('.chat-line[data-sender!=melbaa').find('.message').eq(1)
         //var selector = '.chat-line[data-sender=' + my_nick + ']';
-        var selector = '.from';
-        var node = jNode.find(selector).addBack(selector);
+        var selector = '.chat-line__username';
+        //var node = jNode.find(selector).addBack(selector);
         return node.length === 1 && node.text() === my_nick;
     }
 
@@ -195,7 +205,7 @@ function mel_main() {
 
     last_seen = new Date();
     function highlightGoodComments(jNode) {
-        // log('found a chat line');
+        log('found a chat line');
 
         if (myself(jNode, MY_NICK)) {
             log('found myself');
@@ -203,13 +213,22 @@ function mel_main() {
         }
 
         debuglog(jNode.text());
-        var msgs = jNode.find('.message');
-        if (msgs.length === 0) {
-            log('.message not found');
+
+        var emotes = jNode.find("[data-a-target='emote-name']").children(); // the emotes are the actual children
+
+        if (emotes.length === 0) {
+            log('no emotes found');
             return;
         }
-        //var txt = msgs.attr('data-raw'); // because .data() can cast to eg int
-        var txt = msgs.text();
+
+        var alt_attrs = [];
+
+        emotes.each(function () {
+            alt_attrs.push($(this).attr('alt'));
+        });
+
+        var txt = alt_attrs.join(' ');
+
         // for each pattern, send text
         var patterns = Object.keys(PATTERNS)
         for (var i = 0; i < patterns.length; ++i) {
@@ -239,18 +258,27 @@ function mel_main() {
         }
     }
     // mark all previous lines as seen, so we don't trigger on old chat
-    $('.chat-line').data('alreadyFound', true);
-    waitForKeyElements('.chat-line', highlightGoodComments);
+    var chat_msg_selector = "[data-a-target='chat-line-message']";
+    $(chat_msg_selector).data('alreadyFound', true);
+
+    waitForKeyElements(chat_msg_selector, highlightGoodComments);
 }
 
 
 (function(){
+
+    var scriptElement = document.createElement( "script" );
+    scriptElement.type = "text/javascript";
+    scriptElement.src = "https://code.jquery.com/jquery-3.3.1.min.js";
+    document.body.appendChild( scriptElement );
+
+
     //boilerplate greasemonkey to wait until jQuery is defined...
     function GM_wait() {
         var timeout = 1000;
         if(typeof $ === 'undefined') {
             window.setTimeout(GM_wait,timeout);
-            console.log('waiting for jquery');
+            console.log('waiting for query');
         }
         else
             $(function() { mel_main(); });
